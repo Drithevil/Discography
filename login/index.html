@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#07130f">
+    <title>Sign in | Discography</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            isolation: isolate;
+            overflow-x: hidden;
+            color: #f4f8f5;
+            background:
+                radial-gradient(ellipse at 50% 38%, rgba(0, 141, 103, 0.2), transparent 48%),
+                #07130f;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body::before {
+            content: "";
+            position: fixed;
+            z-index: -1;
+            top: 50%;
+            left: 50%;
+            width: min(78vw, 920px);
+            aspect-ratio: 1;
+            transform: translate(-50%, -50%) rotate(-14deg);
+            background: url("../assets/logo.png") center / contain no-repeat;
+            opacity: 0.3;
+            filter: drop-shadow(0 0 45px rgba(51, 218, 160, 0.13));
+            pointer-events: none;
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        .navbar {
+            position: relative;
+            z-index: 1;
+            width: 100%;
+            margin: 0;
+            padding: 12px max(24px, calc((100% - 1100px) / 2 + 16px));
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: transparent;
+            box-shadow: 0 12px 36px rgba(0, 0, 0, 0.18);
+        }
+
+        .brand {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 0.95rem;
+            font-weight: 750;
+            letter-spacing: 0.13em;
+        }
+
+        .brand img {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            object-fit: cover;
+        }
+
+        .home-link {
+            padding: 10px 16px;
+            border-radius: 10px;
+            color: #e8f1ec;
+            background: rgba(255, 255, 255, 0.04);
+            font-weight: 650;
+            transition: background-color 160ms ease, transform 160ms ease;
+        }
+
+        .home-link:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateY(-1px);
+        }
+
+        main {
+            position: relative;
+            z-index: 1;
+            flex: 1;
+            width: min(100% - 40px, 480px);
+            margin: 0 auto;
+            padding: 52px 0 72px;
+            display: grid;
+            place-items: center;
+        }
+
+        .auth-card {
+            width: 100%;
+            padding: clamp(28px, 7vw, 48px);
+            border-radius: 22px;
+            background: rgba(8, 21, 16, 0.88);
+            box-shadow: 0 24px 80px rgba(0, 0, 0, 0.34);
+            backdrop-filter: blur(12px);
+        }
+
+        .form-container {
+            display: none;
+        }
+
+        .form-container.active {
+            display: block;
+        }
+
+        .eyebrow {
+            margin: 0 0 12px;
+            color: #7ee2bc;
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+        }
+
+        h1 {
+            margin: 0;
+            color: #f4f8f5;
+            font-size: clamp(2rem, 6vw, 2.6rem);
+            letter-spacing: -0.045em;
+        }
+
+        .subtitle {
+            margin: 12px 0 30px;
+            color: #aabbb2;
+            line-height: 1.6;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #dce8e1;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        input {
+            width: 100%;
+            padding: 13px 14px;
+            border: 1px solid rgba(255, 255, 255, 0.14);
+            border-radius: 10px;
+            outline: none;
+            color: #f4f8f5;
+            background: rgba(255, 255, 255, 0.055);
+            font: inherit;
+            transition: border-color 160ms ease, box-shadow 160ms ease;
+        }
+
+        input::placeholder {
+            color: #718178;
+        }
+
+        input:focus {
+            border-color: #26c48e;
+            box-shadow: 0 0 0 3px rgba(38, 196, 142, 0.15);
+        }
+
+        .submit-btn {
+            width: 100%;
+            margin-top: 4px;
+            padding: 14px 18px;
+            border: 0;
+            border-radius: 10px;
+            color: #052117;
+            background: linear-gradient(100deg, #62e0ae, #26c48e);
+            box-shadow: 0 8px 28px rgba(0, 190, 140, 0.16);
+            font: inherit;
+            font-weight: 700;
+            cursor: pointer;
+            transition: transform 160ms ease, box-shadow 160ms ease;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 34px rgba(0, 190, 140, 0.28);
+        }
+
+        .form-footer {
+            margin: 24px 0 0;
+            color: #aabbb2;
+            text-align: center;
+            font-size: 0.92rem;
+        }
+
+        .toggle-btn {
+            padding: 0;
+            border: 0;
+            color: #62e0ae;
+            background: none;
+            font: inherit;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .toggle-btn:hover {
+            color: #98f0cd;
+        }
+
+        footer {
+            position: relative;
+            z-index: 1;
+            padding: 20px 24px;
+            color: #82938a;
+            text-align: center;
+            font-size: 0.85rem;
+        }
+
+        @media (max-width: 520px) {
+            body::before {
+                top: 48%;
+                left: 50%;
+                width: 118vw;
+                opacity: 0.2;
+            }
+
+            .navbar {
+                width: 100%;
+                margin-top: 0;
+                padding: 10px 14px;
+            }
+
+            .brand {
+                gap: 9px;
+                font-size: 0.78rem;
+                letter-spacing: 0.1em;
+            }
+
+            .brand img {
+                width: 34px;
+                height: 34px;
+            }
+
+            .home-link {
+                padding: 9px 12px;
+                font-size: 0.9rem;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                transition-duration: 0.01ms !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="navbar">
+        <a class="brand" href="../index.html" aria-label="Discography home">
+            <img src="../assets/logo.png" alt="">
+            <span>DISCOGRAPHY</span>
+        </a>
+        <a class="home-link" href="../index.html">Back <span aria-hidden="true">←</span></a>
+    </header>
+
+    <main>
+        <section class="auth-card" aria-label="Account access">
+            <div id="loginForm" class="form-container active">
+                <p class="eyebrow">Welcome back</p>
+                <h1>Sign in</h1>
+                <p class="subtitle">Pick up where your music story left off.</p>
+                <form>
+                    <div class="form-group">
+                        <label for="email">E-mail or username</label>
+                        <input type="text" id="email" name="email" placeholder="you@example.com" autocomplete="username" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <input type="password" id="password" name="password" placeholder="Enter your password" autocomplete="current-password" required>
+                    </div>
+                    <button type="submit" class="submit-btn">Sign in</button>
+                </form>
+                <p class="form-footer">New to Discography? <button type="button" class="toggle-btn" onclick="toggleForm()">Create an account</button></p>
+            </div>
+
+            <div id="signupForm" class="form-container">
+                <p class="eyebrow">Start your collection</p>
+                <h1>Create account</h1>
+                <p class="subtitle">Make a space for all the music that feels like you.</p>
+                <form>
+                    <div class="form-group">
+                        <label for="signup-email">E-mail</label>
+                        <input type="email" id="signup-email" name="email" placeholder="you@example.com" autocomplete="email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="signup-password">Password</label>
+                        <input type="password" id="signup-password" name="password" placeholder="Create a password" autocomplete="new-password" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="signup-confirm">Confirm password</label>
+                        <input type="password" id="signup-confirm" name="confirm" placeholder="Enter it again" autocomplete="new-password" required>
+                    </div>
+                    <button type="submit" class="submit-btn">Create account</button>
+                </form>
+                <p class="form-footer">Already have an account? <button type="button" class="toggle-btn" onclick="toggleForm()">Sign in</button></p>
+            </div>
+        </section>
+    </main>
+
+    <footer>Made for the music you love.</footer>
+
+    <script>
+        function toggleForm() {
+            document.getElementById('loginForm').classList.toggle('active');
+            document.getElementById('signupForm').classList.toggle('active');
+        }
+    </script>
+</body>
+</html>
