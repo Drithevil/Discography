@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Discography</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-image: url('logo.png'), radial-gradient(circle, #001610 0%, #000000 100%);
+            background-size: 100%, auto;
+            background-repeat: no-repeat;
+            background-position-x: 20px, center;
+            background-position-y: 100px, center;
+            color: #333;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        header {
+            padding: 30px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        header h1 {
+            color: rgb(255, 255, 255);
+            font-size: 1.5em;
+            font-weight: 700;
+            text-align: left;
+            letter-spacing: 2px;
+            padding: 10px 100px;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo {
+            width: 50px;
+            height: 50px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .header-button {
+            display: flex;
+            align-items: center;
+            margin-right: 50px;
+        }
+
+        a {
+            text-decoration: none;
+        }
+
+        main {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            padding: 100px 20px 40px 20px;
+        }
+
+        section {
+            background: rgba(255, 255, 255, 0);
+            border-radius: 16px;
+            padding: 80px 80px;
+            max-width: 900px;
+            text-align: center;
+        }
+
+        section h2 {
+            color: #ffffff;
+            font-size: 5.5em;
+            margin-bottom: 30px;
+            font-weight: 800;
+        }
+
+        section p {
+            color: #7a7a7a;
+            font-size: 1.3em;
+            line-height: 1.8;
+            margin-bottom: 15px;
+        }
+
+        button {
+            background: #333333;
+            color: white;
+            border: none;
+            padding: 10px 25px;
+            font-size: 0.9em;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        button:hover {
+            background: #575757;
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        .btn-get-started {
+            background: linear-gradient(90deg, #008d67 0%, #00be8c 100%);
+            background-size: 200% 100%;
+            padding: 18px 50px;
+            font-size: 1.2em;
+            margin-top: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-get-started:hover {
+            background: #00be8c;
+        }
+
+        footer {
+            background-color: rgba(0, 0, 0, 0.3);
+            padding: 20px;
+            text-align: center;
+            border-top: 2px solid rgba(255, 255, 255, 0.2);
+            color: white;
+            font-size: 0.95em;
+        }
+
+        @keyframes colorShift {
+            0% {
+                background-position: left center;
+            }
+            100% {
+                background-position: right center;
+            }
+        }
+
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 2em;
+            }
+
+            section {
+                padding: 30px 20px;
+            }
+
+            section h2 {
+                font-size: 1.8em;
+            }
+
+            section p {
+                font-size: 1em;
+            }
+
+            button {
+                padding: 12px 30px;
+                font-size: 0.95em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1><img src="logo.png" alt="Logo" class="logo">DISCOGRAPHY</h1></a>
+        <div class="header-button">
+            <a href="login.html"><button>Login&nbsp;&nbsp;˃</button></a>
+        </div>
+    </header>
+
+    <main>
+        <section>
+            <h2>Discography</h2>
+            <p>Connect Spotify, Apple Music and Youtube Music.</p>
+            <p>Create and customize a profile with all your musical tastes.</p>
+            <a href="login.html"><button class="btn-get-started">Get Started&nbsp;&nbsp;˃</button></a>
+        </section>
+    </main>
+
+    <footer>
+        <p>Discography &copy; 2026 </p>
+        <p>All rights reserved</p>
+    </footer>
+</body>
+</html>
