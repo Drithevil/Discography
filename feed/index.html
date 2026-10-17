@@ -1,0 +1,1362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#090a0b">
+    <title>Music feed | Discography</title>
+    <link rel="stylesheet" href="../assets/site.css">
+    <style>
+        :root {
+            --page: #090a0b;
+            --line: rgba(255, 255, 255, 0.09);
+            --text: #f4f8f5;
+            --muted: #93999a;
+            --green: var(--brand-green);
+        }
+
+        body {
+            min-height: 100vh;
+            margin: 0;
+            position: relative;
+            isolation: isolate;
+            overflow-x: hidden;
+            color: var(--text);
+            background:
+                radial-gradient(ellipse at 50% 0, rgba(119, 133, 126, 0.055), transparent 48%),
+                var(--page);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .topbar {
+            position: sticky;
+            z-index: 5;
+            top: 0;
+            min-height: 68px;
+            padding: 10px max(22px, calc((100% - 1240px) / 2));
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 24px;
+            background: rgba(9, 10, 11, 0.94);
+            backdrop-filter: blur(16px);
+        }
+
+        .brand {
+            display: inline-flex;
+            flex: 0 0 auto;
+            align-items: center;
+            gap: 11px;
+            font-size: 0.9rem;
+            font-weight: 800;
+            letter-spacing: 0.13em;
+        }
+
+        .brand img {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            object-fit: cover;
+            box-shadow: none;
+        }
+
+        .search {
+            width: min(350px, 34vw);
+            position: relative;
+        }
+
+        .search input {
+            width: 100%;
+            height: 40px;
+            padding: 0 14px 0 38px;
+            border: 1px solid var(--line);
+            border-radius: 11px;
+            outline: none;
+            color: var(--text);
+            background: rgba(255, 255, 255, 0.045);
+        }
+
+        .search input:focus {
+            border-color: rgba(98, 224, 174, 0.65);
+            box-shadow: 0 0 0 3px rgba(38, 196, 142, 0.12);
+        }
+
+        .search-icon {
+            position: absolute;
+            top: 50%;
+            left: 13px;
+            color: var(--muted);
+            transform: translateY(-50%);
+            pointer-events: none;
+        }
+
+        .top-actions {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .write-link,
+        .primary-button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            border-radius: 10px;
+            border: 0;
+            color: #e8ece9;
+            background: transparent;
+            font-weight: 750;
+            cursor: pointer;
+            transition: transform 160ms ease, color 160ms ease, background-color 160ms ease;
+        }
+
+        .write-link {
+            padding: 10px 15px;
+            font-size: 0.9rem;
+        }
+
+        .primary-button,
+        .action-button {
+            color: #050806;
+            background: var(--green);
+        }
+
+        .primary-button:hover,
+        .action-button:hover {
+            transform: translateY(-1px);
+        }
+
+        .write-link:hover {
+            transform: translateY(-1px);
+            color: #050806;
+            background: var(--green);
+        }
+
+        .user-link {
+            width: 38px;
+            height: 38px;
+            display: grid;
+            place-items: center;
+            border: 1px solid rgba(255, 255, 255, 0.14);
+            border-radius: 50%;
+            color: #d5ddd8;
+            background: #1b1e1f;
+            font-size: 0.82rem;
+            font-weight: 800;
+        }
+
+        .layout {
+            width: min(1240px, calc(100% - 40px));
+            margin: 0 auto 120px;
+            display: grid;
+            grid-template-columns: 196px minmax(0, 1fr) 254px;
+            align-items: start;
+            gap: 24px;
+        }
+
+        .left-rail,
+        .right-rail {
+            position: sticky;
+            top: 92px;
+        }
+
+        .nav-link {
+            min-height: 43px;
+            padding: 0 12px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            border-radius: 10px;
+            color: #aabbb2;
+            font-size: 0.92rem;
+            font-weight: 600;
+            transition: color 150ms ease, background 150ms ease;
+        }
+
+        .nav-link:hover,
+        .nav-link.active {
+            color: #eafff4;
+            background: rgba(255, 255, 255, 0.055);
+        }
+
+        .nav-link.active {
+            box-shadow: inset 2px 0 var(--green);
+        }
+
+        .nav-icon {
+            width: 19px;
+            color: #89928d;
+            font-size: 1.05rem;
+            text-align: center;
+        }
+
+        .activity-icon {
+            height: 19px;
+            flex: 0 0 auto;
+        }
+
+        .nav-link.active .nav-icon {
+            color: var(--green);
+        }
+
+        .rail-caption {
+            margin: 18px 10px 8px;
+            color: #6f8177;
+            font-size: 0.68rem;
+            font-weight: 800;
+            letter-spacing: 0.13em;
+            text-transform: uppercase;
+        }
+
+        .rail-note {
+            margin: 14px 6px 0;
+            color: #708278;
+            font-size: 0.78rem;
+            line-height: 1.6;
+        }
+
+        .feed-column {
+            position: relative;
+            min-width: 0;
+        }
+
+        .feed-column::before,
+        .feed-column::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            width: 1px;
+            background: rgba(255, 255, 255, 0.1);
+            pointer-events: none;
+        }
+
+        .feed-column::before {
+            left: -12px;
+        }
+
+        .feed-column::after {
+            right: -12px;
+        }
+
+        .feed-tabs {
+            display: flex;
+            justify-content: stretch;
+            width: 100%;
+            gap: 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .feed-tab {
+            min-height: 52px;
+            padding: 0 18px;
+            position: relative;
+            flex: 1;
+            border: 0;
+            color: #9cafa4;
+            background: transparent;
+            font-size: 0.9rem;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .feed-tab:hover {
+            color: #fff;
+            background: rgba(255, 255, 255, 0.035);
+        }
+
+        .feed-tab.active {
+            color: #f4f8f5;
+        }
+
+        .feed-tab.active::after {
+            content: "";
+            position: absolute;
+            right: 25%;
+            bottom: 0;
+            left: 25%;
+            height: 3px;
+            border-radius: 3px 3px 0 0;
+            background: var(--green);
+        }
+
+        .composer {
+            margin-bottom: 4px;
+            padding: 16px 0 18px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .composer-top {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+        }
+
+        .avatar {
+            width: 40px;
+            height: 40px;
+            flex: 0 0 auto;
+            display: grid;
+            place-items: center;
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 50%;
+            color: #d9e1dc;
+            background: linear-gradient(145deg, #353c38, #202423);
+            font-size: 0.78rem;
+            font-weight: 800;
+        }
+
+        .composer textarea {
+            width: 100%;
+            min-height: 58px;
+            padding: 11px 12px;
+            resize: none;
+            border: 0;
+            border-radius: 0;
+            outline: none;
+            color: var(--text);
+            background: transparent;
+            font-size: 0.92rem;
+            line-height: 1.5;
+        }
+
+        .composer textarea::placeholder,
+        .search input::placeholder {
+            color: #718178;
+        }
+
+        .composer-tools {
+            margin: 12px 0 0 52px;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+        }
+
+        .composer-fields {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .composer-fields input {
+            min-width: 0;
+            height: 37px;
+            padding: 0 11px;
+            border: 1px solid rgba(255, 255, 255, 0.09);
+            border-radius: 9px;
+            outline: none;
+            color: #d5ded8;
+            background: rgba(255, 255, 255, 0.035);
+            font: inherit;
+            font-size: 0.78rem;
+            transition: border-color 150ms ease, background 150ms ease;
+        }
+
+        .composer-fields input:focus {
+            border-color: rgba(98, 224, 174, 0.55);
+            background: rgba(255, 255, 255, 0.055);
+        }
+
+        .music-type-picker {
+            min-inline-size: 0;
+            margin: 0;
+            padding: 3px;
+            display: inline-flex;
+            gap: 2px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 11px;
+            background: rgba(255, 255, 255, 0.035);
+        }
+
+        .music-type-option {
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            min-height: 31px;
+            padding: 0 11px;
+            border-radius: 8px;
+            color: #9ca9a1;
+            font-size: 0.76rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: color 150ms ease, background 150ms ease;
+        }
+
+        .music-type-option input {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            margin: 0;
+            opacity: 0;
+        }
+
+        .music-type-option:has(input:checked) {
+            color: #07100b;
+            background: var(--green);
+        }
+
+        .music-type-option:has(input:checked) .vinyl-outline {
+            stroke: #07100b;
+        }
+
+        .music-type-option:has(input:checked) .vinyl-disc {
+            fill: #07100b;
+        }
+
+        .music-type-option:has(input:checked) .vinyl-hole {
+            fill: var(--green);
+        }
+
+        .music-type-icon {
+            color: var(--green);
+        }
+
+        .music-type-option:has(input:checked) .music-type-icon {
+            color: #07100b;
+        }
+
+        .music-type-option:has(input:focus-visible) {
+            outline: 2px solid var(--green);
+            outline-offset: 2px;
+        }
+
+        .vinyl-icon {
+            width: 15px;
+            height: 15px;
+            display: block;
+            flex: 0 0 auto;
+        }
+
+        .composer-fields .music-title {
+            width: 170px;
+        }
+
+        .composer-fields .music-artist {
+            width: 140px;
+        }
+
+        .composer-rating {
+            margin: 15px 0 0 52px;
+            display: flex;
+            align-items: center;
+            gap: 0;
+        }
+
+        .rating-picker {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            outline: none;
+            touch-action: manipulation;
+        }
+
+        .rating-picker:focus-visible {
+            border-radius: 4px;
+            outline: 2px solid var(--green);
+            outline-offset: 3px;
+        }
+
+        .rating-star {
+            --fill: 0%;
+            display: inline-block;
+            color: transparent;
+            background: linear-gradient(90deg, var(--green) var(--fill), #343b37 var(--fill));
+            background-clip: text;
+            -webkit-background-clip: text;
+            font-size: 1.75rem;
+            line-height: 1;
+        }
+
+        .rating-picker .rating-star {
+            cursor: pointer;
+            transition: filter 120ms ease, transform 120ms ease;
+        }
+
+        .rating-picker:hover .rating-star {
+            filter: brightness(1.12);
+        }
+
+        .rating-picker .rating-star:hover {
+            transform: scale(1.12);
+        }
+
+        .primary-button {
+            min-height: 36px;
+            padding: 0 14px;
+            font-size: 0.82rem;
+        }
+
+        .form-message {
+            margin: 10px 0 0 52px;
+            color: #ffb8a7;
+            font-size: 0.82rem;
+        }
+
+        .feed-post {
+            margin-bottom: 0;
+            padding: 19px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .post-top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+        }
+
+        .person {
+            min-width: 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .person-meta {
+            min-width: 0;
+        }
+
+        .person-name {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.89rem;
+            font-weight: 750;
+        }
+
+        .handle,
+        .post-time {
+            color: #809188;
+            font-size: 0.76rem;
+            font-weight: 500;
+        }
+
+        .post-time {
+            margin-top: 3px;
+        }
+
+        .post-copy {
+            max-width: 620px;
+            margin: 14px auto 0;
+            color: #9aa69f;
+            font-size: 0.79rem;
+            line-height: 1.55;
+            overflow-wrap: anywhere;
+        }
+
+        .album-card {
+            margin: 24px auto 0;
+            display: grid;
+            grid-template-columns: 116px minmax(0, 330px);
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+        }
+
+        .record-art {
+            width: 116px;
+            aspect-ratio: 1;
+            position: relative;
+            display: grid;
+            place-items: center;
+            overflow: hidden;
+            border-radius: 8px;
+            color: rgba(255, 255, 255, 0.94);
+            background:
+                radial-gradient(circle at center, #c4d8c7 0 7%, #303e36 7.5% 11%, transparent 11.5%),
+                repeating-radial-gradient(circle at center, rgba(255, 255, 255, 0.1) 0 1px, transparent 2px 6px),
+                linear-gradient(140deg, #456453, #1d2923 70%);
+            box-shadow: inset 0 0 18px rgba(0, 0, 0, 0.4);
+        }
+
+        .record-art::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(145deg, transparent 44%, rgba(0, 0, 0, 0.46));
+        }
+
+        .record-art span {
+            z-index: 1;
+            max-width: 75%;
+            font-size: 0.64rem;
+            font-weight: 850;
+            letter-spacing: 0.1em;
+            line-height: 1.2;
+            text-align: center;
+            text-shadow: 0 2px 8px #000;
+            text-transform: uppercase;
+        }
+
+        .art-indigo {
+            background:
+                radial-gradient(circle at center, #f6d7b0 0 7%, #3f3049 7.5% 11%, transparent 11.5%),
+                repeating-radial-gradient(circle at center, rgba(255, 255, 255, 0.1) 0 1px, transparent 2px 6px),
+                linear-gradient(140deg, #786487, #211d38 72%);
+        }
+
+        .art-sunset {
+            background:
+                radial-gradient(circle at center, #ffe0a3 0 7%, #71422d 7.5% 11%, transparent 11.5%),
+                repeating-radial-gradient(circle at center, rgba(255, 255, 255, 0.1) 0 1px, transparent 2px 6px),
+                linear-gradient(140deg, #bd714b, #452a37 72%);
+        }
+
+        .album-card > div:last-child {
+            text-align: center;
+        }
+
+        .album-title {
+            margin: 0 0 3px;
+            font-size: 1.12rem;
+            font-weight: 800;
+            line-height: 1.35;
+        }
+
+        .album-artist {
+            margin: 0;
+            color: #9baca3;
+            font-size: 0.8rem;
+        }
+
+        .rating {
+            margin-top: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+        }
+
+        .rating small {
+            margin-left: 5px;
+            color: #94a69c;
+            font-size: 0.72rem;
+            letter-spacing: 0;
+        }
+
+        .rating .rating-star {
+            cursor: default;
+        }
+
+        .post-actions {
+            margin-top: 12px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .action-button {
+            min-width: 58px;
+            min-height: 38px;
+            padding: 0 12px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            border: 0;
+            border-radius: 999px;
+            font-size: 0.84rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: transform 160ms ease;
+        }
+
+        .side-card {
+            margin-bottom: 20px;
+            padding: 0 0 18px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .profile-card {
+            position: fixed;
+            z-index: 4;
+            right: max(8px, calc((100% - 1240px) / 2 - 28px));
+            bottom: 20px;
+            width: 280px;
+            min-height: 76px;
+            margin: 0;
+            padding: 12px 16px;
+            display: flex;
+            align-items: center;
+            border: 0;
+            border-radius: 16px;
+            color: var(--text);
+            background: transparent;
+            text-decoration: none;
+            transition: background 160ms ease, transform 160ms ease;
+        }
+
+        .profile-card:hover {
+            transform: translateY(-2px);
+            color: #050806;
+            background: var(--green);
+        }
+
+        .profile-card:hover .profile-summary span {
+            color: #050806;
+        }
+
+        .profile-card:focus-visible {
+            outline: 2px solid var(--green);
+            outline-offset: 3px;
+        }
+
+        .side-card h2 {
+            margin-bottom: 13px;
+            font-size: 0.94rem;
+            letter-spacing: -0.01em;
+        }
+
+        .profile-summary {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            gap: 11px;
+        }
+
+        .profile-summary .avatar {
+            width: 43px;
+            height: 43px;
+        }
+
+        .profile-summary strong {
+            display: block;
+            margin-bottom: 3px;
+            font-size: 0.86rem;
+        }
+
+        .profile-summary span {
+            color: var(--muted);
+            font-size: 0.75rem;
+        }
+
+        .trend-list,
+        .friend-list {
+            display: grid;
+            gap: 11px;
+        }
+
+        .trend-tag {
+            width: fit-content;
+            padding: 0;
+            border: 0;
+            color: #c4cec8;
+            background: none;
+            font-size: 0.82rem;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .trend-tag:hover {
+            color: var(--green);
+        }
+
+        .trend-tag span {
+            display: block;
+            margin-top: 3px;
+            color: #75867d;
+            font-size: 0.68rem;
+            font-weight: 500;
+        }
+
+        .friend {
+            display: flex;
+            align-items: center;
+            gap: 9px;
+        }
+
+        .friend .avatar {
+            width: 32px;
+            height: 32px;
+            font-size: 0.65rem;
+        }
+
+        .friend-copy strong {
+            display: block;
+            font-size: 0.76rem;
+        }
+
+        .friend-copy span {
+            display: block;
+            margin-top: 2px;
+            color: #82938a;
+            font-size: 0.66rem;
+        }
+
+        .empty-state {
+            display: none;
+            padding: 32px 0;
+            color: var(--muted);
+            text-align: center;
+            line-height: 1.6;
+        }
+
+        @media (max-width: 1020px) {
+            .layout {
+                grid-template-columns: 170px minmax(0, 1fr);
+            }
+
+            .right-rail {
+                display: none;
+            }
+
+            .feed-column::after {
+                display: none;
+            }
+        }
+
+        @media (max-width: 700px) {
+            .topbar {
+                min-height: 62px;
+                padding: 9px 15px;
+                flex-wrap: wrap;
+                gap: 10px;
+            }
+
+            .brand {
+                gap: 8px;
+                font-size: 0.77rem;
+            }
+
+            .brand img {
+                width: 34px;
+                height: 34px;
+            }
+
+            .search {
+                order: 3;
+                width: 100%;
+            }
+
+            .top-actions {
+                gap: 9px;
+            }
+
+            .write-link {
+                padding: 9px 11px;
+                font-size: 0.8rem;
+            }
+
+            .user-link {
+                width: 34px;
+                height: 34px;
+            }
+
+            .layout {
+                width: min(100% - 24px, 560px);
+                margin: 0 auto 100px;
+                display: block;
+            }
+
+            .feed-column::before {
+                display: none;
+            }
+
+            .profile-card {
+                right: 20px;
+                bottom: 12px;
+                width: min(280px, calc(100vw - 24px));
+                min-height: 70px;
+                padding: 10px 13px;
+            }
+
+            .left-rail {
+                position: static;
+                margin-bottom: 13px;
+            }
+
+            .nav-card {
+                display: flex;
+                gap: 4px;
+                overflow-x: auto;
+            }
+
+            .nav-link {
+                min-height: 38px;
+                padding: 0 10px;
+                flex: 0 0 auto;
+                font-size: 0.8rem;
+            }
+
+            .nav-link.active {
+                box-shadow: inset 0 -2px var(--green);
+            }
+
+            .nav-icon {
+                width: auto;
+            }
+
+            .rail-caption,
+            .rail-note {
+                display: none;
+            }
+
+            .composer {
+                padding: 14px 0 16px;
+            }
+
+            .composer-tools {
+                margin-left: 0;
+            }
+
+            .composer-rating {
+                margin-left: 0;
+            }
+
+            .form-message {
+                margin-left: 0;
+            }
+
+            .feed-post {
+                padding: 16px 0;
+            }
+        }
+
+        @media (max-width: 410px) {
+            .composer-tools {
+                align-items: flex-end;
+            }
+
+            .composer-fields {
+                display: grid;
+                grid-template-columns: 112px minmax(0, 1fr);
+                width: 100%;
+            }
+
+            .composer-fields .music-artist {
+                grid-column: 1 / -1;
+            }
+
+            .composer-fields .music-title {
+                width: 100%;
+            }
+
+            .music-type-picker {
+                grid-column: 1 / -1;
+                justify-self: start;
+            }
+
+            .primary-button {
+                align-self: flex-end;
+            }
+
+            .album-card {
+                grid-template-columns: 88px minmax(0, 1fr);
+                gap: 14px;
+            }
+
+            .record-art {
+                width: 88px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="topbar" id="top">
+        <a class="brand" href="../" aria-label="Discography home">
+            <img src="../assets/logo.png" alt="">
+            <span>DISCOGRAPHY</span>
+        </a>
+
+        <label class="search">
+            <span class="search-icon" aria-hidden="true">⌕</span>
+            <input id="feedSearch" type="search" placeholder="Search songs, albums, artists..." aria-label="Search feed">
+        </label>
+
+        <div class="top-actions">
+            <a class="write-link" href="#composer">Write a review</a>
+            <a class="user-link" href="#your-profile" aria-label="Your profile">JD</a>
+        </div>
+    </header>
+
+    <div class="layout">
+        <aside class="left-rail" aria-label="Main navigation">
+            <nav class="nav-card">
+                <a class="nav-link active" href="#timeline"><svg class="nav-icon activity-icon" viewBox="0 0 20 20" aria-hidden="true"><circle class="vinyl-outline" cx="10" cy="10" r="9" fill="none" stroke="currentColor" stroke-width="1.4"/><circle class="vinyl-disc" cx="10" cy="10" r="6.5" fill="currentColor"/><circle class="vinyl-hole" cx="10" cy="10" r="1.35" fill="var(--page)"/></svg> Activity</a>
+                <a class="nav-link" href="#postList"><span class="nav-icon" aria-hidden="true">▤</span> My diary</a>
+                <a class="nav-link" href="#collections"><span class="nav-icon" aria-hidden="true">▧</span> Collections</a>
+                <p class="rail-caption">Your corner</p>
+                <a class="nav-link" href="#your-profile"><span class="nav-icon" aria-hidden="true">♙</span> Profile</a>
+                <a class="nav-link" href="#following"><span class="nav-icon" aria-hidden="true">♡</span> Following</a>
+            </nav>
+            <p class="rail-note">A little space for the records you love and the people who get it.</p>
+        </aside>
+
+        <main class="feed-column" id="timeline">
+            <div class="feed-tabs" role="tablist" aria-label="Choose feed">
+                <button class="feed-tab active" type="button" role="tab" aria-selected="true" aria-controls="postList" data-feed="all">For you</button>
+                <button class="feed-tab" type="button" role="tab" aria-selected="false" aria-controls="postList" data-feed="following">Following</button>
+            </div>
+
+            <form class="composer" id="composer" aria-label="Share a listening note">
+                <div class="composer-top">
+                    <div class="avatar" aria-hidden="true">JD</div>
+                    <textarea id="postText" maxlength="400" placeholder="What have you been listening to?" aria-label="Your listening note"></textarea>
+                </div>
+                <div class="composer-tools">
+                    <div class="composer-fields">
+                        <fieldset class="music-type-picker" aria-label="Choose what you're sharing">
+                            <label class="music-type-option">
+                                <input type="radio" name="musicType" value="song" checked>
+                                <span class="music-type-icon" aria-hidden="true">♫</span> Song
+                            </label>
+                            <label class="music-type-option">
+                                <input type="radio" name="musicType" value="album">
+                                <svg class="vinyl-icon" viewBox="0 0 20 20" aria-hidden="true">
+                                    <circle class="vinyl-outline" cx="10" cy="10" r="9" fill="none" stroke="#62e0ae" stroke-width="1"/>
+                                    <circle class="vinyl-disc" cx="10" cy="10" r="6.5" fill="#62e0ae"/>
+                                    <circle class="vinyl-hole" cx="10" cy="10" r="1.35" fill="#171b19"/>
+                                </svg> Album
+                            </label>
+                        </fieldset>
+                        <input class="music-title" id="musicTitle" type="text" maxlength="70" placeholder="Album name" aria-label="Album name">
+                        <input class="music-artist" id="musicArtist" type="text" maxlength="70" placeholder="Artist" aria-label="Artist name">
+                    </div>
+                    <button class="primary-button" type="submit">Share review</button>
+                </div>
+                <div class="composer-rating">
+                    <div class="rating-picker" id="ratingPicker" role="slider" tabindex="0" aria-label="Music rating" aria-valuemin="0" aria-valuemax="5" aria-valuestep="0.5" aria-valuenow="0" aria-valuetext="Not rated">
+                        <span class="rating-star" data-star="1" aria-hidden="true">★</span>
+                        <span class="rating-star" data-star="2" aria-hidden="true">★</span>
+                        <span class="rating-star" data-star="3" aria-hidden="true">★</span>
+                        <span class="rating-star" data-star="4" aria-hidden="true">★</span>
+                        <span class="rating-star" data-star="5" aria-hidden="true">★</span>
+                    </div>
+                </div>
+                <p class="form-message" id="postMessage" role="status" hidden></p>
+            </form>
+
+            <section id="postList" aria-label="Recent listening activity">
+                <article class="feed-post" data-following="true" data-search="sarah chen little simz sometimes i might be introvert soul orchestral hip hop review">
+                    <header class="post-top">
+                        <div class="person">
+                            <div class="avatar" aria-hidden="true">SC</div>
+                            <div class="person-meta">
+                                <div class="person-name">Sarah Chen <span class="handle">@sarahsounds</span></div>
+                                <div class="post-time">2h ago</div>
+                            </div>
+                        </div>
+                    </header>
+                    <div class="album-card">
+                        <div class="record-art"><span>Sometimes<br>I Might Be<br>Introvert</span></div>
+                        <div>
+                            <h2 class="album-title">Sometimes I Might Be Introvert</h2>
+                            <p class="album-artist">Little Simz · 2021</p>
+                            <div class="rating" aria-label="5 out of 5 stars"><span class="rating-star" style="--fill: 100%" aria-hidden="true">★</span><span class="rating-star" style="--fill: 100%" aria-hidden="true">★</span><span class="rating-star" style="--fill: 100%" aria-hidden="true">★</span><span class="rating-star" style="--fill: 100%" aria-hidden="true">★</span><span class="rating-star" style="--fill: 100%" aria-hidden="true">★</span><small>5.0</small></div>
+                        </div>
+                    </div>
+                    <p class="post-copy">An album that feels like stepping into your own power. The strings, the storytelling, that final run of songs — I keep finding new details every time. <span class="hashtag">#OnRepeat</span></p>
+                    <div class="post-actions">
+                        <button class="action-button like-button" type="button" aria-label="Like this post" aria-pressed="false"><span aria-hidden="true">♡</span> <span class="like-count">24</span></button>
+                    </div>
+                </article>
+
+                <article class="feed-post" data-following="true" data-search="ari flores radiohead in rainbows alternative art rock favorite album">
+                    <header class="post-top">
+                        <div class="person">
+                            <div class="avatar" aria-hidden="true">AF</div>
+                            <div class="person-meta">
+                                <div class="person-name">Ari Flores <span class="handle">@ari.afterhours</span></div>
+                                <div class="post-time">5h ago</div>
+                            </div>
+                        </div>
+                    </header>
+                    <div class="album-card">
+                        <div class="record-art art-indigo"><span>In<br>Rainbows</span></div>
+                        <div>
+                            <h2 class="album-title">In Rainbows</h2>
+                            <p class="album-artist">Radiohead · 2007</p>
+                            <div class="rating" aria-label="5 out of 5 stars"><span class="rating-star" style="--fill: 100%" aria-hidden="true">★</span><span class="rating-star" style="--fill: 100%" aria-hidden="true">★</span><span class="rating-star" style="--fill: 100%" aria-hidden="true">★</span><span class="rating-star" style="--fill: 100%" aria-hidden="true">★</span><span class="rating-star" style="--fill: 100%" aria-hidden="true">★</span><small>5.0</small></div>
+                        </div>
+                    </div>
+                    <p class="post-copy">Back in my In Rainbows era. It somehow sounds like a rainy afternoon and the middle of the night at the same time.</p>
+                    <div class="post-actions">
+                        <button class="action-button like-button" type="button" aria-label="Like this post" aria-pressed="false"><span aria-hidden="true">♡</span> <span class="like-count">18</span></button>
+                    </div>
+                </article>
+
+                <article class="feed-post" data-following="false" data-search="milo reed cleo sol heaven listen r&b soul recommendation">
+                    <header class="post-top">
+                        <div class="person">
+                            <div class="avatar" aria-hidden="true">MR</div>
+                            <div class="person-meta">
+                                <div class="person-name">Milo Reed <span class="handle">@milo.wav</span></div>
+                                <div class="post-time">1d ago</div>
+                            </div>
+                        </div>
+                    </header>
+                    <div class="album-card">
+                        <div class="record-art art-sunset"><span>Heaven</span></div>
+                        <div>
+                            <h2 class="album-title">Heaven</h2>
+                            <p class="album-artist">Cleo Sol · 2023</p>
+                            <div class="rating" aria-label="4 out of 5 stars"><span class="rating-star" style="--fill: 100%" aria-hidden="true">★</span><span class="rating-star" style="--fill: 100%" aria-hidden="true">★</span><span class="rating-star" style="--fill: 100%" aria-hidden="true">★</span><span class="rating-star" style="--fill: 100%" aria-hidden="true">★</span><span class="rating-star" style="--fill: 0%" aria-hidden="true">★</span><small>4.0</small></div>
+                        </div>
+                    </div>
+                    <p class="post-copy">A soft landing for a long week. If you need something warm and unhurried, give this one a spin. My first listen turned into a favorite. What’s your comfort album?</p>
+                    <div class="post-actions">
+                        <button class="action-button like-button" type="button" aria-label="Like this post" aria-pressed="false"><span aria-hidden="true">♡</span> <span class="like-count">9</span></button>
+                    </div>
+                </article>
+            </section>
+            <p class="empty-state" id="emptyState">No listening notes match that search. Try another album, artist, or listener.</p>
+        </main>
+
+        <aside class="right-rail">
+            <section class="side-card" id="collections">
+                <h2>In the community</h2>
+                <div class="trend-list">
+                    <button class="trend-tag" type="button" data-search-tag="OnRepeat">#OnRepeat<span>128 listening notes</span></button>
+                    <button class="trend-tag" type="button" data-search-tag="comfort album">#ComfortAlbum<span>86 listening notes</span></button>
+                    <button class="trend-tag" type="button" data-search-tag="first listen">#FirstListen<span>64 listening notes</span></button>
+                </div>
+            </section>
+
+            <section class="side-card" id="following">
+                <h2>People to follow</h2>
+                <div class="friend-list">
+                    <div class="friend"><div class="avatar" aria-hidden="true">MK</div><div class="friend-copy"><strong>Morgan Kim</strong><span>Dream-pop & deep cuts</span></div></div>
+                    <div class="friend"><div class="avatar" aria-hidden="true">LP</div><div class="friend-copy"><strong>Leo Park</strong><span>Keeping a jazz diary</span></div></div>
+                    <div class="friend"><div class="avatar" aria-hidden="true">TN</div><div class="friend-copy"><strong>Taylor North</strong><span>New music every Friday</span></div></div>
+                </div>
+            </section>
+        </aside>
+    </div>
+
+    <a class="profile-card" id="your-profile" href="../profile/" aria-label="Open your profile">
+        <div class="profile-summary">
+            <div class="avatar" aria-hidden="true">JD</div>
+            <div><strong>Jamie Doe</strong><span>@jamieonwax</span></div>
+        </div>
+    </a>
+
+    <script>
+        const postList = document.getElementById('postList');
+        const searchInput = document.getElementById('feedSearch');
+        const emptyState = document.getElementById('emptyState');
+        let activeFeed = 'all';
+
+        function filterPosts() {
+            const query = searchInput.value.trim().toLowerCase();
+            let visibleCount = 0;
+
+            postList.querySelectorAll('.feed-post').forEach((post) => {
+                const followsAuthor = post.dataset.following === 'true';
+                const matchesFeed = activeFeed === 'all' || followsAuthor;
+                const matchesSearch = !query || post.textContent.toLowerCase().includes(query) ||
+                    (post.dataset.search || '').includes(query);
+                const visible = matchesFeed && matchesSearch;
+
+                post.hidden = !visible;
+                if (visible) visibleCount += 1;
+            });
+
+            emptyState.style.display = visibleCount ? 'none' : 'block';
+        }
+
+        document.querySelectorAll('.feed-tab').forEach((tab) => {
+            tab.addEventListener('click', () => {
+                activeFeed = tab.dataset.feed;
+                document.querySelectorAll('.feed-tab').forEach((item) => {
+                    const isActive = item === tab;
+                    item.classList.toggle('active', isActive);
+                    item.setAttribute('aria-selected', String(isActive));
+                });
+                filterPosts();
+            });
+        });
+
+        searchInput.addEventListener('input', filterPosts);
+
+        document.querySelectorAll('.trend-tag').forEach((tag) => {
+            tag.addEventListener('click', () => {
+                searchInput.value = tag.dataset.searchTag;
+                filterPosts();
+                searchInput.focus();
+            });
+        });
+
+        postList.addEventListener('click', (event) => {
+            const likeButton = event.target.closest('.like-button');
+
+            if (likeButton) {
+                const isLiked = likeButton.getAttribute('aria-pressed') === 'true';
+                const count = likeButton.querySelector('.like-count');
+                const nextCount = Number(count.textContent) + (isLiked ? -1 : 1);
+                count.textContent = String(nextCount);
+                likeButton.setAttribute('aria-pressed', String(!isLiked));
+                likeButton.classList.toggle('liked', !isLiked);
+                likeButton.querySelector('[aria-hidden="true"]').textContent = isLiked ? '♡' : '♥';
+            }
+        });
+
+        const musicTypeOptions = document.querySelectorAll('input[name="musicType"]');
+        const musicTitleField = document.getElementById('musicTitle');
+        const ratingPicker = document.getElementById('ratingPicker');
+
+        function paintRating(value) {
+            ratingPicker.querySelectorAll('.rating-star').forEach((star) => {
+                const fill = Math.min(1, Math.max(0, value - Number(star.dataset.star) + 1));
+                star.style.setProperty('--fill', `${fill * 100}%`);
+            });
+        }
+
+        function setRating(value) {
+            const rating = Math.min(5, Math.max(0, Math.round(value * 2) / 2));
+            ratingPicker.dataset.value = String(rating);
+            ratingPicker.setAttribute('aria-valuenow', String(rating));
+            ratingPicker.setAttribute('aria-valuetext', rating ? `${rating.toFixed(1)} out of 5 stars` : 'Not rated');
+            paintRating(rating);
+        }
+
+        function ratingFromPointer(event) {
+            const bounds = ratingPicker.getBoundingClientRect();
+            const fraction = (event.clientX - bounds.left) / bounds.width;
+            return Math.min(5, Math.max(0.5, Math.ceil(fraction * 10) / 2));
+        }
+
+        ratingPicker.addEventListener('pointermove', (event) => paintRating(ratingFromPointer(event)));
+        ratingPicker.addEventListener('pointerleave', () => paintRating(Number(ratingPicker.dataset.value || 0)));
+        ratingPicker.addEventListener('click', (event) => setRating(ratingFromPointer(event)));
+        ratingPicker.addEventListener('keydown', (event) => {
+            const current = Number(ratingPicker.dataset.value || 0);
+            let next = current;
+
+            if (event.key === 'ArrowRight' || event.key === 'ArrowUp') next = Math.min(5, current + 0.5);
+            else if (event.key === 'ArrowLeft' || event.key === 'ArrowDown') next = Math.max(0, current - 0.5);
+            else if (event.key === 'Home') next = 0;
+            else if (event.key === 'End') next = 5;
+            else return;
+
+            event.preventDefault();
+            setRating(next);
+        });
+
+        function updateMusicType() {
+            const selectedType = document.querySelector('input[name="musicType"]:checked').value;
+            const isSong = selectedType === 'song';
+            musicTitleField.placeholder = `${isSong ? 'Song' : 'Album'} name`;
+            musicTitleField.setAttribute('aria-label', isSong ? 'Song name' : 'Album name');
+        }
+
+        musicTypeOptions.forEach((option) => option.addEventListener('change', updateMusicType));
+
+        function createRatingDisplay(score) {
+            const rating = document.createElement('div');
+            rating.className = 'rating';
+            rating.setAttribute('aria-label', `${score.toFixed(1)} out of 5 stars`);
+
+            for (let index = 0; index < 5; index += 1) {
+                const star = document.createElement('span');
+                const fill = Math.min(1, Math.max(0, score - index));
+                star.className = 'rating-star';
+                star.setAttribute('aria-hidden', 'true');
+                star.style.setProperty('--fill', `${fill * 100}%`);
+                star.textContent = '★';
+                rating.append(star);
+            }
+
+            const numeric = document.createElement('small');
+            numeric.textContent = score.toFixed(1);
+            rating.append(numeric);
+            return rating;
+        }
+
+        document.getElementById('composer').addEventListener('submit', (event) => {
+            event.preventDefault();
+            const textField = document.getElementById('postText');
+            const artistField = document.getElementById('musicArtist');
+            const message = document.getElementById('postMessage');
+            const note = textField.value.trim();
+            const musicTitle = musicTitleField.value.trim();
+            const artist = artistField.value.trim();
+            const score = Number(ratingPicker.dataset.value || 0);
+
+            if (!note && !musicTitle) {
+                message.textContent = 'Add a listening note or a song or album before sharing.';
+                message.hidden = false;
+                textField.focus();
+                return;
+            }
+
+            const post = document.createElement('article');
+            post.className = 'feed-post';
+            post.dataset.following = 'false';
+            post.dataset.search = `${note} ${musicTitle} ${artist}`.toLowerCase();
+
+            const header = document.createElement('header');
+            header.className = 'post-top';
+            const person = document.createElement('div');
+            person.className = 'person';
+            const avatar = document.createElement('div');
+            avatar.className = 'avatar';
+            avatar.setAttribute('aria-hidden', 'true');
+            avatar.textContent = 'JD';
+            const meta = document.createElement('div');
+            meta.className = 'person-meta';
+            const name = document.createElement('div');
+            name.className = 'person-name';
+            name.textContent = 'Jamie Doe';
+            const time = document.createElement('div');
+            time.className = 'post-time';
+            time.textContent = 'just now';
+            meta.append(name, time);
+            person.append(avatar, meta);
+            header.append(person);
+            post.append(header);
+
+            if (musicTitle) {
+                const card = document.createElement('div');
+                card.className = 'album-card';
+                const art = document.createElement('div');
+                art.className = 'record-art';
+                const artTitle = document.createElement('span');
+                artTitle.textContent = musicTitle;
+                art.append(artTitle);
+                const details = document.createElement('div');
+                const title = document.createElement('h2');
+                title.className = 'album-title';
+                title.textContent = musicTitle;
+                details.append(title);
+                if (artist) {
+                    const artistName = document.createElement('p');
+                    artistName.className = 'album-artist';
+                    artistName.textContent = artist;
+                    details.append(artistName);
+                }
+                if (score) details.append(createRatingDisplay(score));
+                card.append(art, details);
+                post.append(card);
+            }
+
+            if (note) {
+                const copy = document.createElement('p');
+                copy.className = 'post-copy';
+                copy.textContent = note;
+                post.append(copy);
+            }
+
+            const actions = document.createElement('div');
+            actions.className = 'post-actions';
+            actions.innerHTML = '<button class="action-button like-button" type="button" aria-label="Like this post" aria-pressed="false"><span aria-hidden="true">♡</span> <span class="like-count">0</span></button>';
+            post.append(actions);
+            postList.prepend(post);
+            textField.value = '';
+            musicTitleField.value = '';
+            artistField.value = '';
+            document.querySelector('input[name="musicType"][value="song"]').checked = true;
+            updateMusicType();
+            setRating(0);
+            message.hidden = true;
+            filterPosts();
+        });
+    </script>
+</body>
+</html>

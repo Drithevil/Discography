@@ -5,11 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="theme-color" content="#07130f">
     <title>Discography</title>
+    <link rel="stylesheet" href="assets/site.css">
     <style>
-        * {
-            box-sizing: border-box;
-        }
-
         body {
             min-height: 100vh;
             margin: 0;
@@ -40,41 +37,6 @@
             pointer-events: none;
         }
 
-        a {
-            color: inherit;
-            text-decoration: none;
-        }
-
-        .navbar {
-            position: relative;
-            z-index: 1;
-            width: 100%;
-            margin: 0;
-            padding: 12px max(24px, calc((100% - 1100px) / 2 + 16px));
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            background: transparent;
-            box-shadow: 0 12px 36px rgba(0, 0, 0, 0.18);
-        }
-
-        .brand {
-            display: inline-flex;
-            align-items: center;
-            gap: 12px;
-            font-size: 0.95rem;
-            font-weight: 750;
-            letter-spacing: 0.13em;
-        }
-
-        .brand img {
-            width: 40px;
-            height: 40px;
-            border-radius: 10px;
-            object-fit: cover;
-        }
-
-        .login-link,
         .primary-link {
             display: inline-flex;
             align-items: center;
@@ -83,17 +45,6 @@
             border-radius: 10px;
             font-weight: 650;
             transition: transform 160ms ease, background-color 160ms ease, box-shadow 160ms ease;
-        }
-
-        .login-link {
-            padding: 10px 16px;
-            color: #e8f1ec;
-            background: rgba(255, 255, 255, 0.04);
-        }
-
-        .login-link:hover {
-            background: rgba(255, 255, 255, 0.1);
-            transform: translateY(-1px);
         }
 
         main {
@@ -147,22 +98,13 @@
         .primary-link {
             padding: 14px 22px;
             color: #052117;
-            background: linear-gradient(100deg, #62e0ae, #26c48e);
+            background: linear-gradient(100deg, var(--brand-green), var(--brand-green-strong));
             box-shadow: 0 8px 28px rgba(0, 190, 140, 0.2);
         }
 
         .primary-link:hover {
             transform: translateY(-2px);
             box-shadow: 0 12px 34px rgba(0, 190, 140, 0.3);
-        }
-
-        footer {
-            position: relative;
-            z-index: 1;
-            padding: 20px 24px;
-            color: #82938a;
-            text-align: center;
-            font-size: 0.85rem;
         }
 
         @media (max-width: 520px) {
@@ -173,50 +115,19 @@
                 opacity: 0.2;
             }
 
-            .navbar {
-                width: 100%;
-                margin-top: 0;
-                padding: 10px 14px;
-            }
-
-            .brand {
-                gap: 9px;
-                font-size: 0.78rem;
-                letter-spacing: 0.1em;
-            }
-
-            .brand img {
-                width: 34px;
-                height: 34px;
-            }
-
-            .login-link {
-                padding: 9px 12px;
-                font-size: 0.9rem;
-            }
-
             main {
                 padding: 76px 0 90px;
-            }
-        }
-
-        @media (prefers-reduced-motion: reduce) {
-            *,
-            *::before,
-            *::after {
-                scroll-behavior: auto !important;
-                transition-duration: 0.01ms !important;
             }
         }
     </style>
 </head>
 <body>
-    <header class="navbar">
-        <a class="brand" href="./" aria-label="Discography home">
+    <header class="site-navbar">
+        <a class="site-brand" href="./" aria-label="Discography home">
             <img src="assets/logo.png" alt="">
             <span>DISCOGRAPHY</span>
         </a>
-        <a class="login-link" href="login/">Login <span aria-hidden="true">→</span></a>
+        <a class="site-nav-link" href="login/">Login <span aria-hidden="true">→</span></a>
     </header>
 
     <main>
@@ -228,6 +139,6 @@
         </section>
     </main>
 
-    <footer>Made for the music you love.</footer>
+    <footer class="site-footer">Made for the music you love.</footer>
 </body>
 </html>

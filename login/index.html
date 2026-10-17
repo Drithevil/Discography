@@ -5,11 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="theme-color" content="#07130f">
     <title>Sign in | Discography</title>
+    <link rel="stylesheet" href="../assets/site.css">
     <style>
-        * {
-            box-sizing: border-box;
-        }
-
         body {
             min-height: 100vh;
             margin: 0;
@@ -38,54 +35,6 @@
             opacity: 0.3;
             filter: drop-shadow(0 0 45px rgba(51, 218, 160, 0.13));
             pointer-events: none;
-        }
-
-        a {
-            color: inherit;
-            text-decoration: none;
-        }
-
-        .navbar {
-            position: relative;
-            z-index: 1;
-            width: 100%;
-            margin: 0;
-            padding: 12px max(24px, calc((100% - 1100px) / 2 + 16px));
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            background: transparent;
-            box-shadow: 0 12px 36px rgba(0, 0, 0, 0.18);
-        }
-
-        .brand {
-            display: inline-flex;
-            align-items: center;
-            gap: 12px;
-            font-size: 0.95rem;
-            font-weight: 750;
-            letter-spacing: 0.13em;
-        }
-
-        .brand img {
-            width: 40px;
-            height: 40px;
-            border-radius: 10px;
-            object-fit: cover;
-        }
-
-        .home-link {
-            padding: 10px 16px;
-            border-radius: 10px;
-            color: #e8f1ec;
-            background: rgba(255, 255, 255, 0.04);
-            font-weight: 650;
-            transition: background-color 160ms ease, transform 160ms ease;
-        }
-
-        .home-link:hover {
-            background: rgba(255, 255, 255, 0.1);
-            transform: translateY(-1px);
         }
 
         main {
@@ -167,8 +116,24 @@
         }
 
         input:focus {
-            border-color: #26c48e;
+            border-color: var(--brand-green-strong);
             box-shadow: 0 0 0 3px rgba(38, 196, 142, 0.15);
+        }
+
+        .forgot-btn {
+            display: block;
+            margin: -10px 0 18px auto;
+            padding: 0;
+            border: 0;
+            color: var(--brand-green);
+            background: none;
+            font: inherit;
+            font-size: 0.88rem;
+            cursor: pointer;
+        }
+
+        .forgot-btn:hover {
+            color: #98f0cd;
         }
 
         .submit-btn {
@@ -178,7 +143,7 @@
             border: 0;
             border-radius: 10px;
             color: #052117;
-            background: linear-gradient(100deg, #62e0ae, #26c48e);
+            background: linear-gradient(100deg, var(--brand-green), var(--brand-green-strong));
             box-shadow: 0 8px 28px rgba(0, 190, 140, 0.16);
             font: inherit;
             font-weight: 700;
@@ -201,7 +166,7 @@
         .toggle-btn {
             padding: 0;
             border: 0;
-            color: #62e0ae;
+            color: var(--brand-green);
             background: none;
             font: inherit;
             font-weight: 700;
@@ -212,13 +177,12 @@
             color: #98f0cd;
         }
 
-        footer {
-            position: relative;
-            z-index: 1;
-            padding: 20px 24px;
-            color: #82938a;
-            text-align: center;
-            font-size: 0.85rem;
+        .recovery-note {
+            min-height: 1.5em;
+            margin: 14px 0 0;
+            color: #aabbb2;
+            font-size: 0.9rem;
+            line-height: 1.5;
         }
 
         @media (max-width: 520px) {
@@ -228,46 +192,16 @@
                 width: 118vw;
                 opacity: 0.2;
             }
-
-            .navbar {
-                width: 100%;
-                margin-top: 0;
-                padding: 10px 14px;
-            }
-
-            .brand {
-                gap: 9px;
-                font-size: 0.78rem;
-                letter-spacing: 0.1em;
-            }
-
-            .brand img {
-                width: 34px;
-                height: 34px;
-            }
-
-            .home-link {
-                padding: 9px 12px;
-                font-size: 0.9rem;
-            }
-        }
-
-        @media (prefers-reduced-motion: reduce) {
-            *,
-            *::before,
-            *::after {
-                transition-duration: 0.01ms !important;
-            }
         }
     </style>
 </head>
 <body>
-    <header class="navbar">
-        <a class="brand" href="../" aria-label="Discography home">
+    <header class="site-navbar">
+        <a class="site-brand" href="../" aria-label="Discography home">
             <img src="../assets/logo.png" alt="">
             <span>DISCOGRAPHY</span>
         </a>
-        <a class="home-link" href="../">Back <span aria-hidden="true">←</span></a>
+        <a class="site-nav-link" href="../">Back <span aria-hidden="true">←</span></a>
     </header>
 
     <main>
@@ -276,7 +210,7 @@
                 <p class="eyebrow">Welcome back</p>
                 <h1>Sign in</h1>
                 <p class="subtitle">Pick up where your music story left off.</p>
-                <form>
+                <form method="post">
                     <div class="form-group">
                         <label for="email">E-mail or username</label>
                         <input type="text" id="email" name="email" placeholder="you@example.com" autocomplete="username" required>
@@ -285,16 +219,33 @@
                         <label for="password">Password</label>
                         <input type="password" id="password" name="password" placeholder="Enter your password" autocomplete="current-password" required>
                     </div>
+                    <button type="button" class="forgot-btn" data-show-form="recoveryForm">Forgot password?</button>
                     <button type="submit" class="submit-btn">Sign in</button>
                 </form>
-                <p class="form-footer">New to Discography? <button type="button" class="toggle-btn" onclick="toggleForm()">Create an account</button></p>
+                <p class="recovery-note" id="loginNote" role="status" aria-live="polite"></p>
+                <p class="form-footer">New to Discography? <button type="button" class="toggle-btn" data-show-form="signupForm">Create an account</button></p>
+            </div>
+
+            <div id="recoveryForm" class="form-container">
+                <p class="eyebrow">Account recovery</p>
+                <h1>Forgot password?</h1>
+                <p class="subtitle">Enter the e-mail address associated with your account.</p>
+                <form id="recoveryFormSubmit" method="post">
+                    <div class="form-group">
+                        <label for="recovery-email">E-mail</label>
+                        <input type="email" id="recovery-email" name="email" placeholder="you@example.com" autocomplete="email" required>
+                    </div>
+                    <button type="submit" class="submit-btn">Continue</button>
+                    <p id="recoveryNote" class="recovery-note" aria-live="polite"></p>
+                </form>
+                <p class="form-footer"><button type="button" class="toggle-btn" data-show-form="loginForm">Back to sign in</button></p>
             </div>
 
             <div id="signupForm" class="form-container">
                 <p class="eyebrow">Start your collection</p>
                 <h1>Create account</h1>
                 <p class="subtitle">Make a space for all the music that feels like you.</p>
-                <form>
+                <form id="signupFormSubmit" method="post">
                     <div class="form-group">
                         <label for="signup-email">E-mail</label>
                         <input type="email" id="signup-email" name="email" placeholder="you@example.com" autocomplete="email" required>
@@ -309,18 +260,52 @@
                     </div>
                     <button type="submit" class="submit-btn">Create account</button>
                 </form>
-                <p class="form-footer">Already have an account? <button type="button" class="toggle-btn" onclick="toggleForm()">Sign in</button></p>
+                <p class="recovery-note" id="signupNote" role="status" aria-live="polite"></p>
+                <p class="form-footer">Already have an account? <button type="button" class="toggle-btn" data-show-form="loginForm">Sign in</button></p>
             </div>
         </section>
     </main>
 
-    <footer>Made for the music you love.</footer>
+    <footer class="site-footer">Made for the music you love.</footer>
 
     <script>
-        function toggleForm() {
-            document.getElementById('loginForm').classList.toggle('active');
-            document.getElementById('signupForm').classList.toggle('active');
+        const formPanels = document.querySelectorAll('.form-container');
+
+        function showForm(formId) {
+            formPanels.forEach((panel) => panel.classList.toggle('active', panel.id === formId));
+            if (formId === 'recoveryForm') document.getElementById('recovery-email').focus();
         }
+
+        document.querySelectorAll('[data-show-form]').forEach((button) => {
+            button.addEventListener('click', () => showForm(button.dataset.showForm));
+        });
+
+        document.getElementById('recoveryFormSubmit').addEventListener('submit', (event) => {
+            event.preventDefault();
+            document.getElementById('recoveryNote').textContent =
+                'Password recovery is not connected to an e-mail service yet.';
+        });
+
+        document.querySelector('#loginForm form').addEventListener('submit', (event) => {
+            event.preventDefault();
+            document.getElementById('loginNote').textContent =
+                'Sign in is not connected to an account service yet.';
+        });
+
+        document.getElementById('signupFormSubmit').addEventListener('submit', (event) => {
+            event.preventDefault();
+            const password = document.getElementById('signup-password').value;
+            const confirmation = document.getElementById('signup-confirm');
+            const note = document.getElementById('signupNote');
+
+            if (password !== confirmation.value) {
+                note.textContent = 'Your passwords do not match.';
+                confirmation.focus();
+                return;
+            }
+
+            note.textContent = 'Account creation is not connected to an account service yet.';
+        });
     </script>
 </body>
 </html>
