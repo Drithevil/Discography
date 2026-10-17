@@ -1247,6 +1247,7 @@
         }
 
         musicTypeOptions.forEach((option) => option.addEventListener('change', updateMusicType));
+        updateMusicType();
 
         function createRatingDisplay(score) {
             const rating = document.createElement('div');
