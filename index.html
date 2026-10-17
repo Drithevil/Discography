@@ -41,10 +41,9 @@
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            gap: 10px;
             border-radius: 10px;
             font-weight: 650;
-            transition: transform 160ms ease, background-color 160ms ease, box-shadow 160ms ease;
+            transition: background-color 160ms ease, filter 160ms ease;
         }
 
         main {
@@ -97,14 +96,7 @@
 
         .primary-link {
             padding: 14px 22px;
-            color: #052117;
-            background: linear-gradient(100deg, var(--brand-green), var(--brand-green-strong));
-            box-shadow: 0 8px 28px rgba(0, 190, 140, 0.2);
-        }
-
-        .primary-link:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 12px 34px rgba(0, 190, 140, 0.3);
+            filter: brightness(0.9);
         }
 
         @media (max-width: 520px) {
@@ -127,7 +119,7 @@
             <img src="assets/logo.png" alt="">
             <span>DISCOGRAPHY</span>
         </a>
-        <a class="site-nav-link" href="login/">Login <span aria-hidden="true">→</span></a>
+        <a class="site-nav-link action-link site-button" href="login/">Login</a>
     </header>
 
     <main>
@@ -135,7 +127,7 @@
             <p class="eyebrow">Your music, your story</p>
             <h1>Make your taste <span>your own.</span></h1>
             <p class="intro">Bring your favorite music together, shape a profile that feels like you, and share the sounds that make your world.</p>
-            <a class="primary-link" href="login/">Get started <span aria-hidden="true">→</span></a>
+            <a class="primary-link site-button" href="login/">Get started</a>
         </section>
     </main>
 
