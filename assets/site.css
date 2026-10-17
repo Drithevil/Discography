@@ -12,7 +12,7 @@
 
 html {
     scroll-behavior: smooth;
-    zoom: 1.15;
+    font-size: 115%;
 }
 
 a {
@@ -75,12 +75,29 @@ button {
     color: #e8f1ec;
     background: rgba(255, 255, 255, 0.04);
     font-weight: 650;
-    transition: transform 160ms ease, background-color 160ms ease;
+    transition: background-color 160ms ease;
 }
 
-.site-nav-link:hover {
+.site-nav-link:not(.site-button):hover {
     background: rgba(255, 255, 255, 0.1);
-    transform: translateY(-1px);
+}
+
+.site-nav-link.action-link {
+    padding: 10px 15px;
+    font-weight: 750;
+}
+
+.site-button {
+    border: 0;
+    color: #050806;
+    background: var(--brand-green);
+    box-shadow: none;
+    cursor: pointer;
+    transition: filter 160ms ease;
+}
+
+.site-button:hover {
+    filter: brightness(0.9);
 }
 
 .site-footer {
@@ -111,6 +128,10 @@ button {
     .site-nav-link {
         padding: 9px 12px;
         font-size: 0.9rem;
+    }
+
+    .site-nav-link.action-link {
+        padding: 9px 11px;
     }
 }
 

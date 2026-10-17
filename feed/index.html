@@ -103,34 +103,13 @@
             justify-content: center;
             gap: 8px;
             border-radius: 10px;
-            border: 0;
-            color: #e8ece9;
-            background: transparent;
             font-weight: 750;
             cursor: pointer;
-            transition: transform 160ms ease, color 160ms ease, background-color 160ms ease;
         }
 
         .write-link {
             padding: 10px 15px;
             font-size: 0.9rem;
-        }
-
-        .primary-button,
-        .action-button {
-            color: #050806;
-            background: var(--green);
-        }
-
-        .primary-button:hover,
-        .action-button:hover {
-            transform: translateY(-1px);
-        }
-
-        .write-link:hover {
-            transform: translateY(-1px);
-            color: #050806;
-            background: var(--green);
         }
 
         .user-link {
@@ -475,15 +454,11 @@
 
         .rating-picker .rating-star {
             cursor: pointer;
-            transition: filter 120ms ease, transform 120ms ease;
+            transition: filter 120ms ease;
         }
 
         .rating-picker:hover .rating-star {
             filter: brightness(1.12);
-        }
-
-        .rating-picker .rating-star:hover {
-            transform: scale(1.12);
         }
 
         .primary-button {
@@ -646,26 +621,25 @@
         }
 
         .post-actions {
-            margin-top: 12px;
+            margin: 18px 0 0;
             display: flex;
             align-items: center;
+            justify-content: center;
             gap: 10px;
         }
 
         .action-button {
-            min-width: 58px;
-            min-height: 38px;
-            padding: 0 12px;
+            min-width: 72px;
+            min-height: 44px;
+            padding: 0 16px;
             display: inline-flex;
             align-items: center;
             justify-content: center;
             gap: 8px;
-            border: 0;
             border-radius: 999px;
-            font-size: 0.84rem;
-            font-weight: 700;
+            font-size: 0.92rem;
+            font-weight: 750;
             cursor: pointer;
-            transition: transform 160ms ease;
         }
 
         .side-card {
@@ -690,11 +664,10 @@
             color: var(--text);
             background: transparent;
             text-decoration: none;
-            transition: background 160ms ease, transform 160ms ease;
+            transition: background 160ms ease;
         }
 
         .profile-card:hover {
-            transform: translateY(-2px);
             color: #050806;
             background: var(--green);
         }
@@ -743,8 +716,12 @@
             gap: 11px;
         }
 
+        .trend-list {
+            justify-items: stretch;
+        }
+
         .trend-tag {
-            width: fit-content;
+            width: 100%;
             padding: 0;
             border: 0;
             color: #c4cec8;
@@ -752,6 +729,7 @@
             font-size: 0.82rem;
             font-weight: 700;
             cursor: pointer;
+            text-align: left;
         }
 
         .trend-tag:hover {
@@ -971,7 +949,7 @@
         </label>
 
         <div class="top-actions">
-            <a class="write-link" href="#composer">Write a review</a>
+            <a class="write-link site-button" href="#composer">Write a review</a>
             <a class="user-link" href="#your-profile" aria-label="Your profile">JD</a>
         </div>
     </header>
@@ -1019,7 +997,7 @@
                         <input class="music-title" id="musicTitle" type="text" maxlength="70" placeholder="Album name" aria-label="Album name">
                         <input class="music-artist" id="musicArtist" type="text" maxlength="70" placeholder="Artist" aria-label="Artist name">
                     </div>
-                    <button class="primary-button" type="submit">Share review</button>
+                    <button class="primary-button site-button" type="submit">Share review</button>
                 </div>
                 <div class="composer-rating">
                     <div class="rating-picker" id="ratingPicker" role="slider" tabindex="0" aria-label="Music rating" aria-valuemin="0" aria-valuemax="5" aria-valuestep="0.5" aria-valuenow="0" aria-valuetext="Not rated">
@@ -1054,7 +1032,7 @@
                     </div>
                     <p class="post-copy">An album that feels like stepping into your own power. The strings, the storytelling, that final run of songs — I keep finding new details every time. <span class="hashtag">#OnRepeat</span></p>
                     <div class="post-actions">
-                        <button class="action-button like-button" type="button" aria-label="Like this post" aria-pressed="false"><span aria-hidden="true">♡</span> <span class="like-count">24</span></button>
+                        <button class="action-button site-button like-button" type="button" aria-label="Like this post" aria-pressed="false"><span aria-hidden="true">♡</span> <span class="like-count">24</span></button>
                     </div>
                 </article>
 
@@ -1078,7 +1056,7 @@
                     </div>
                     <p class="post-copy">Back in my In Rainbows era. It somehow sounds like a rainy afternoon and the middle of the night at the same time.</p>
                     <div class="post-actions">
-                        <button class="action-button like-button" type="button" aria-label="Like this post" aria-pressed="false"><span aria-hidden="true">♡</span> <span class="like-count">18</span></button>
+                        <button class="action-button site-button like-button" type="button" aria-label="Like this post" aria-pressed="false"><span aria-hidden="true">♡</span> <span class="like-count">18</span></button>
                     </div>
                 </article>
 
@@ -1102,7 +1080,7 @@
                     </div>
                     <p class="post-copy">A soft landing for a long week. If you need something warm and unhurried, give this one a spin. My first listen turned into a favorite. What’s your comfort album?</p>
                     <div class="post-actions">
-                        <button class="action-button like-button" type="button" aria-label="Like this post" aria-pressed="false"><span aria-hidden="true">♡</span> <span class="like-count">9</span></button>
+                        <button class="action-button site-button like-button" type="button" aria-label="Like this post" aria-pressed="false"><span aria-hidden="true">♡</span> <span class="like-count">9</span></button>
                     </div>
                 </article>
             </section>
@@ -1346,7 +1324,7 @@
 
             const actions = document.createElement('div');
             actions.className = 'post-actions';
-            actions.innerHTML = '<button class="action-button like-button" type="button" aria-label="Like this post" aria-pressed="false"><span aria-hidden="true">♡</span> <span class="like-count">0</span></button>';
+            actions.innerHTML = '<button class="action-button site-button like-button" type="button" aria-label="Like this post" aria-pressed="false"><span aria-hidden="true">♡</span> <span class="like-count">0</span></button>';
             post.append(actions);
             postList.prepend(post);
             textField.value = '';
